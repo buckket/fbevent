@@ -26,11 +26,11 @@ def get_inviter(name):
         return inviter
 
 
-def perform_action(guest, inviter):
+def perform_action(event, guest, inviter):
     guest_event_db = get_guest(element)
     inviter_db = get_inviter(inviter)
     if guest_event_db and inviter_db:
-        instance = database.session.query(GuestInvites).filter_by(invited=guest_event_db).filter_by(inviter=inviter_db).first()
+        instance = database.session.query(GuestEvent).filter_by(event=event).join(GuestInvites).filter_by(invited=guest_event_db).filter_by(inviter=inviter_db).first()
         if not instance:
             print "[+] %s invited %s" % (inviter_db.name, guest_event_db.guest.fb_name)
             guest_invite_db = GuestInvites(invited=guest_event_db, inviter=inviter_db)
@@ -40,6 +40,10 @@ def perform_action(guest, inviter):
 if __name__ == "__main__":
 
     init_db()
+
+
+    event_id = ''
+    event_db = database.session.query(Event).filter_by(event_id=event_id).first()
 
     with open("test.txt") as f:
         data = f.read()
@@ -55,13 +59,13 @@ if __name__ == "__main__":
             match = re.search('(.*) hat (.*) eingeladen.', label)
             if match:
                 inviter = match.group(1)
-                perform_action(guest=element, inviter=inviter)
+                perform_action(event=event_db, guest=element, inviter=inviter)
 
             # multi invites
             match = re.search('(.*) wurde eingeladen von:',label)
             if match:
                 lines = label.splitlines()
                 for line in lines[1:]:
-                    perform_action(guest=element, inviter=line)
+                    perform_action(event=event_db, guest=element, inviter=line)
 
         database.session.commit()

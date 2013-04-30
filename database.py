@@ -2,6 +2,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship, backref, sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
 
+import settings
 
 Base = declarative_base()
 engine = None
@@ -12,7 +13,7 @@ session = None
 def init_db():
     global engine, session
 
-    engine = create_engine('sqlite:///test.db', echo=False)
+    engine = create_engine(settings.DB_URI, echo=False)
 
     Session = scoped_session(sessionmaker(bind=engine))
     session = Session()
@@ -26,10 +27,10 @@ class Event(Base):
     event = Column(Integer(unsigned=True), primary_key=True, autoincrement=True)
     event_id = Column(String(32), unique=True)
     name = Column(String(256))
-    description = Column(String(256))
+    description = Column(Text())
     start_time = Column(DateTime())
     end_time = Column(DateTime())
-    location = Column(String(128))
+    location = Column(Text())
 
 
 class Guest(Base):
