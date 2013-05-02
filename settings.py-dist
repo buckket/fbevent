@@ -1,2 +1,7 @@
 ## Database configuration
 DB_URI = 'sqlite:///fbevent.db'
+
+## GRAPH API configuration
+# Get your token by visting:
+# https://developers.facebook.com/tools/explorer/
+ACCESS_TOKEN = ''

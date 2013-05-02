@@ -1,4 +1,5 @@
 import re
+import argparse
 from bs4 import BeautifulSoup
 
 import database
@@ -39,13 +40,17 @@ def perform_action(event, guest, inviter):
 
 if __name__ == "__main__":
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument('file', type=str, help='the dumped file to parse')
+    parser.add_argument('event', type=str, help='corresponding event id')
+    args = parser.parse_args()
+
     init_db()
 
-
-    event_id = ''
+    event_id = args.event
     event_db = database.session.query(Event).filter_by(event_id=event_id).first()
 
-    with open("test.txt") as f:
+    with open(args.file) as f:
         data = f.read()
         soup = BeautifulSoup(data)
 

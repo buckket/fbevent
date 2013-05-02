@@ -1,26 +1,30 @@
 import requests
+import argparse
 import dateutil.parser
 
+import settings
 import database
 from database import init_db
 from database import Base, Event, Guest, Inviter, GuestEvent
 
 
 base_url = 'https://graph.facebook.com/'
-event_id = ''
-
-access_token = ''
 
 
 def execute_request(request):
-    r = requests.get(base_url + event_id + '/' + request + '?access_token=' + access_token)
+    r = requests.get(base_url + event_id + '/' + request + '?access_token=' + settings.ACCESS_TOKEN)
     return r.json
 
 
 if __name__ == "__main__":
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument('event', type=str, help='corresponding event id')
+    args = parser.parse_args()
+
     init_db()
 
+    event_id = args.event
     instance = database.session.query(Event).filter_by(event_id=event_id).first()
     if instance:
         event_db = instance
