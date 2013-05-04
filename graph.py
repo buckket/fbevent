@@ -8,11 +8,8 @@ from database import init_db
 from database import Base, Event, Guest, Inviter, GuestEvent
 
 
-base_url = 'https://graph.facebook.com/'
-
-
 def execute_request(request):
-    r = requests.get(base_url + event_id + '/' + request + '?access_token=' + settings.ACCESS_TOKEN)
+    r = requests.get('https://graph.facebook.com/%s/%s?access_token=%s' % (event_id, request, settings.ACCESS_TOKEN))
     return r.json
 
 
@@ -32,11 +29,16 @@ if __name__ == "__main__":
         event = execute_request('')
         if event:
             name = event['name']
+            owner_fb_id = event['owner']['id']
+            owner_fb_name = event['owner']['name']
             description = event['description'] if event.has_key('location') else None
             location = event['location'] if event.has_key('location') else None
             start_time = dateutil.parser.parse(event['start_time']) if event.has_key('start_time') else None
             end_time = dateutil.parser.parse(event['end_time']) if event.has_key('end_time') else None
-            event_db = Event(event_id=event_id, name=name, description=description, location=location, start_time=start_time, end_time=end_time)
+            event_db = Event(event_id=event_id, name=name, 
+                owner_fb_id=owner_fb_id, owner_fb_name=owner_fb_name,
+                description=description, location=location, 
+                start_time=start_time, end_time=end_time)
             database.session.add(event_db)
 
     print "[*] Working on '%s' (%s)" % (event_db.name, event_db.event_id)

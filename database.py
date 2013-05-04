@@ -26,6 +26,8 @@ class Event(Base):
 
     event = Column(Integer(unsigned=True), primary_key=True, autoincrement=True)
     event_id = Column(String(32), unique=True)
+    owner_fb_id = Column(String(32))
+    owner_fb_name = Column(String(128))
     name = Column(String(256))
     description = Column(Text())
     start_time = Column(DateTime())

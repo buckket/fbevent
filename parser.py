@@ -58,7 +58,9 @@ if __name__ == "__main__":
             label = element.get('aria-label')
 
             # own invites
-            # wip
+            match = re.search('Du hast (.*) eingeladen.', label)
+            if match:
+                perform_action(event=event_db, guest=element, inviter=event_db.owner_fb_name)
 
             # single invites
             match = re.search('(.*) hat (.*) eingeladen.', label)
