@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title%}events{% endblock %}
+{% block content %}
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>event_id</th>
+            <th>event</th>
+            <th>date</th>
+            <th>attending</th>
+            <th>unsure</th>
+            <th>declined</th>
+            <th>not_replied</th>
+            <th>invites</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for event in events %}
+<tr>
+    <td>{{ event.event }}</td>
+    <td><a href="https://www.facebook.com/events/{{ event.event_id }}/">{{ event.event_id }}</a></td>
+    <td>{{ event.name }}</td>
+    <td>{{ event.start_time }}</td>
+    <td>{{ stats[event.event].attending }}</td>
+    <td>{{ stats[event.event].unsure }}</td>
+    <td>{{ stats[event.event].declined }}</td>
+    <td>{{ stats[event.event].not_replied }}</td>
+    <td>{{ stats[event.event].invites }}</td>
+</tr>
+{% endfor %}
+    </tbody>
+</table>
+{% endblock %}
